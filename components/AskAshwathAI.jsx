@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * components/AskAshwathAI.jsx
- *
- * Full-screen AI chatbot that expands from the bottom-right
- * floating button to cover the entire viewport.
- */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,7 +28,7 @@ const INITIAL_MESSAGE = {
   role: 'model',
   parts: [
     {
-      text: "Hi! I'm Ashwath's portfolio assistant \nAsk me anything about Ashwath — his skills, projects, education, or experience.",
+      text: "Hi! I'm Ashwath's portfolio assistant \n Ask me anything about Ashwath — his skills, projects, education, or experience.",
     },
   ],
 };
