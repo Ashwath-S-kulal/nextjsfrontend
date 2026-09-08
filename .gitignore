@@ -77,11 +77,3 @@ build/
 # dataconnect generated files
 .dataconnect
 
-
-public/images/Auth
-public/images/Boat
-public/images/CRA
-public/images/Freelance
-public/images/HealthCare
-public/images/Servicemate
-public/resume/
