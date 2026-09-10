@@ -75,6 +75,21 @@ export default function Freelance() {
     };
   }, [isFullscreen]);
 
+  // Hide hanging AI chatbot while fullscreen screenshot lightbox modal is open
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (isFullscreen) {
+      window.dispatchEvent(new CustomEvent('toggle-hanging-bot', { detail: { id: 'freelance-lightbox', open: true } }));
+    } else {
+      window.dispatchEvent(new CustomEvent('toggle-hanging-bot', { detail: { id: 'freelance-lightbox', open: false } }));
+    }
+
+    return () => {
+      window.dispatchEvent(new CustomEvent('toggle-hanging-bot', { detail: { id: 'freelance-lightbox', open: false } }));
+    };
+  }, [isFullscreen]);
+
   const currentScreenshot = screenshots[activeScreenIndex] || screenshots[0];
 
   return (

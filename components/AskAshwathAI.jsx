@@ -433,6 +433,33 @@ export default function AskAshwathAI() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasOpened, setHasOpened] = useState(false);
+  const [blockingModals, setBlockingModals] = useState({});
+
+  // Listen for modals (e.g. ProjectModal, Freelance screenshot lightbox) requesting to hide the hanging bot
+  useEffect(() => {
+    const handleToggle = (e) => {
+      const { id, open } = e.detail || {};
+      if (!id) return;
+      setBlockingModals((prev) => {
+        if (open) {
+          if (prev[id]) return prev;
+          return { ...prev, [id]: true };
+        } else {
+          if (!prev[id]) return prev;
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        }
+      });
+    };
+
+    window.addEventListener('toggle-hanging-bot', handleToggle);
+    return () => {
+      window.removeEventListener('toggle-hanging-bot', handleToggle);
+    };
+  }, []);
+
+  const isBlocked = Object.keys(blockingModals).length > 0;
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -730,7 +757,7 @@ export default function AskAshwathAI() {
 
       {/* ── Hanging Bot Trigger on Screen ── */}
       <AnimatePresence>
-        {!isOpen && <HangingBot onClick={handleOpen} />}
+        {!isOpen && !isBlocked && <HangingBot onClick={handleOpen} />}
       </AnimatePresence>
     </>
   );

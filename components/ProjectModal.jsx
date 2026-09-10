@@ -65,6 +65,17 @@ export default function ProjectModal({ project, onClose }) {
     };
   }, [project, onClose, isFullscreen, handlePrev, handleNext]);
 
+  // Hide hanging AI chatbot while project modal is active
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    window.dispatchEvent(new CustomEvent('toggle-hanging-bot', { detail: { id: 'project-modal', open: true } }));
+
+    return () => {
+      window.dispatchEvent(new CustomEvent('toggle-hanging-bot', { detail: { id: 'project-modal', open: false } }));
+    };
+  }, []);
+
   if (!project) return null;
 
   const currentSnapshot = snapshots[activeImageIndex] || project.image;
