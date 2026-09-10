@@ -68,7 +68,6 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-bg text-text-secondary antialiased selection:bg-accent-cyan selection:text-black">
         {children}
-        {/* Floating AI chatbot — portfolio-only, server-side Gemini API */}
         <AskAshwathAI />
       </body>
     </html>

@@ -99,7 +99,7 @@ export default function Hero() {
             className="lg:col-span-7 flex flex-col items-start"
           >
             {/* Status Pill */}
-          
+
 
             {/* Main Heading */}
             <motion.h1
@@ -140,9 +140,6 @@ export default function Hero() {
               {portfolio.bio}
             </motion.p>
 
-
-
-            {/* Social Links & Quick Connect */}
             <motion.div
               variants={fadeUp}
               className="mt-6 flex items-center gap-2"
@@ -206,7 +203,7 @@ export default function Hero() {
               {/* Ambient Radiant Backlight Spotlight */}
               <div className="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 sm:w-72 sm:h-72 bg-gradient-to-tr from-cyan-500/20 via-emerald-500/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
-           
+
 
               {/* Free-Standing Cutout Photo (No Card Box!) */}
               <div className="relative w-full aspect-[5/5] [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)]">
@@ -258,7 +255,11 @@ export default function Hero() {
             </div>
           </motion.div>
 
+
+
         </div>
+
+
       </div>
     </section>
   );

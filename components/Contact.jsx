@@ -167,15 +167,15 @@ export default function Contact() {
             {/* 1. Email Card */}
             <motion.div
               variants={fadeUp}
-              className="relative group rounded-2xl border border-white/[0.07] bg-white/[0.02] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between gap-5 overflow-hidden transition-all duration-300 hover:border-cyan-500/25 hover:bg-white/[0.04] hover:shadow-[0_0_40px_rgba(6,182,212,0.06)]"
+              className="relative group rounded-2xl border border-white/[0.07] bg-white/[0.02] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between gap-5 overflow-hidden "
             >
               {/* Subtle top glow on hover */}
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent opacity-0" />
 
               {/* Top row: icon + label */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500/15 group-hover:border-cyan-500/35 transition-all duration-300 flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 duration-300 flex-shrink-0">
                     <Mail className="w-4 h-4" />
                   </div>
                   <div>
@@ -227,15 +227,15 @@ export default function Contact() {
             {/* 2. WhatsApp Card */}
             <motion.div
               variants={fadeUp}
-              className="relative group rounded-2xl border border-white/[0.07] bg-white/[0.02] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between gap-5 overflow-hidden transition-all duration-300 hover:border-emerald-500/25 hover:bg-white/[0.04] hover:shadow-[0_0_40px_rgba(16,185,129,0.06)]"
+              className="relative group rounded-2xl border border-white/[0.07] bg-white/[0.02] backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between gap-5 overflow-hidden"
             >
               {/* Subtle top glow on hover */}
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent opacity-0" />
 
               {/* Top row: icon + label */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/15 group-hover:border-emerald-500/35 transition-all duration-300 flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
                     <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>

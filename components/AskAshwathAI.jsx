@@ -11,6 +11,7 @@ import {
   User,
   Sparkles,
   ArrowLeft,
+  ExternalLink,
 } from 'lucide-react';
 
 // ── Suggested questions ───────────────────────────────────────────
@@ -49,12 +50,12 @@ function TypingDots() {
   );
 }
 
-// ── Helper to format inline markdown like **bold**, `code`, *italic* ──
+// ── Helper to format inline markdown like [link](url), raw URLs, **bold**, `code`, *italic* ──
 function formatInline(str, baseKey = 'inline') {
   if (!str) return null;
 
-  // Split tokens: **bold**, `code`, *italic*
-  const tokenRegex = /(\*\*.*?\*\*|`.*?`|\*.*?\*)/g;
+  // Match markdown links, bold, code, italic, and raw URLs
+  const tokenRegex = /(\[[^\]]+\]\((?:https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|\*\*.*?\*\*|`.*?`|\*.*?\*|https?:\/\/[^\s<>)"]+)/g;
   const parts = [];
   let lastIndex = 0;
   let match;
@@ -66,7 +67,27 @@ function formatInline(str, baseKey = 'inline') {
     const token = match[0];
     const key = `${baseKey}-${match.index}`;
 
-    if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
+    if (token.startsWith('[') && token.includes('](') && token.endsWith(')')) {
+      const linkMatch = token.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)$/);
+      if (linkMatch) {
+        const [, linkText, href] = linkMatch;
+        parts.push(
+          <a
+            key={key}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 font-medium text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-400/50 hover:decoration-cyan-300 transition-colors cursor-pointer group"
+          >
+            <span>{linkText}</span>
+            <ExternalLink className="w-3 h-3 inline-block shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+          </a>
+        );
+      } else {
+        parts.push(token);
+      }
+    } else if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
       parts.push(
         <strong key={key} className="font-semibold text-white/95">
           {token.slice(2, -2)}
@@ -83,6 +104,20 @@ function formatInline(str, baseKey = 'inline') {
         <em key={key} className="italic text-white/85">
           {token.slice(1, -1)}
         </em>
+      );
+    } else if (token.startsWith('http://') || token.startsWith('https://')) {
+      parts.push(
+        <a
+          key={key}
+          href={token}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 font-medium text-cyan-400 hover:text-cyan-300 underline underline-offset-4 decoration-cyan-400/50 hover:decoration-cyan-300 transition-colors break-all cursor-pointer group"
+        >
+          <span>{token}</span>
+          <ExternalLink className="w-3 h-3 inline-block shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+        </a>
       );
     } else {
       parts.push(token);
@@ -236,6 +271,160 @@ function ChatBubble({ role, text, isNew }) {
   );
 }
 
+// ── Hanging Bot Trigger Component (Movement & Physics) ─────────────
+function HangingBot({ onClick }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      key="hanging-bot"
+      initial={{ y: -190, opacity: 0 }}
+      animate={{
+        y: 0,
+        opacity: 1,
+        rotate: [-4.5, 4.5, -4.5],
+      }}
+      exit={{
+        y: -190,
+        opacity: 0,
+        transition: { duration: 0.35, ease: 'easeInOut' },
+      }}
+      transition={{
+        y: { type: 'spring', stiffness: 140, damping: 13 },
+        opacity: { duration: 0.4 },
+        rotate: {
+          repeat: Infinity,
+          duration: 3.8,
+          ease: 'easeInOut',
+        },
+      }}
+      style={{ transformOrigin: 'top center' }}
+      className="fixed top-0 right-8 sm:right-8 md:right-12 z-[9990] flex flex-col items-center select-none cursor-pointer group pointer-events-auto"
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      role="button"
+      tabIndex={0}
+      aria-label="Open Ashwath AI Chatbot"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+    >
+      {/* Ceiling Mount */}
+      <div className="w-3.5 h-1.5 rounded-b-md bg-zinc-700/90 border-x border-b border-white/20 shadow-sm" />
+
+      {/* Hanging Cable / Wire with animated energy pulse */}
+      <div className="w-[1.5px] h-16 sm:h-20 bg-gradient-to-b from-white/20 via-white/40 to-white/70 relative">
+        <motion.div
+          className="w-1.5 h-1.5 -left-[2px] rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] absolute"
+          animate={{ top: ['0%', '100%'] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+
+      {/* Wire Hook Ring */}
+      <div className="w-3 h-3 rounded-full border-2 border-white/40 -mb-1 bg-transparent" />
+
+      {/* Bot Antenna */}
+      <div className="flex flex-col items-center">
+        <div className="relative">
+          <span className="w-2.5 h-2.5 rounded-full bg-white block shadow-[0_0_8px_rgba(255,255,255,0.85)]" />
+          <span className="animate-ping absolute -inset-0.5 rounded-full bg-white opacity-50" />
+        </div>
+        <div className="w-1 h-2 bg-zinc-500 -mt-0.5" />
+      </div>
+
+      {/* Bot Body Chassis - Sleek Blackish Dark Cyber Look */}
+      <motion.div
+        whileHover={{ scale: 1.12 }}
+        whileTap={{ scale: 0.92 }}
+        className="relative flex flex-col items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-[#18181c] via-[#0e0e11] to-[#050507] border border-white/15 p-2 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_15px_rgba(255,255,255,0.05)] group-hover:border-white/35 group-hover:shadow-[0_12px_35px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.12)] transition-all duration-300"
+      >
+        {/* Glow backdrop inside body */}
+        <div className="absolute inset-0 rounded-2xl bg-white/[0.03] blur-sm pointer-events-none" />
+
+        {/* Side Ear Bolts */}
+        <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1.5 h-4 rounded-l-md bg-zinc-800 border-l border-y border-white/20" />
+        <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-4 rounded-r-md bg-zinc-800 border-r border-y border-white/20" />
+
+        {/* Visor Screen */}
+        <div className="relative w-full h-7 rounded-xl bg-black border border-white/20 flex items-center justify-center gap-2 overflow-hidden shadow-inner">
+          {/* Subtle visor scanlines */}
+          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.15)_1px,transparent_1px)] bg-[size:100%_3px] pointer-events-none" />
+
+          {/* Animated Blinking Eyes */}
+          <motion.div
+            className={`w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95)] z-10 transition-all ${
+              isHovered ? 'scale-125 bg-zinc-100 shadow-[0_0_12px_rgba(255,255,255,1)]' : ''
+            }`}
+            animate={
+              isHovered
+                ? { scaleY: [1, 0.2, 1] }
+                : {
+                    scaleY: [1, 1, 0.1, 1, 1],
+                    scaleX: [1, 1, 1.2, 1, 1],
+                  }
+            }
+            transition={{
+              duration: isHovered ? 0.6 : 3.4,
+              repeat: Infinity,
+              times: isHovered ? undefined : [0, 0.9, 0.93, 0.96, 1],
+            }}
+          />
+          <motion.div
+            className={`w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95)] z-10 transition-all ${
+              isHovered ? 'scale-125 bg-zinc-100 shadow-[0_0_12px_rgba(255,255,255,1)]' : ''
+            }`}
+            animate={
+              isHovered
+                ? { scaleY: [1, 0.2, 1] }
+                : {
+                    scaleY: [1, 1, 0.1, 1, 1],
+                    scaleX: [1, 1, 1.2, 1, 1],
+                  }
+            }
+            transition={{
+              duration: isHovered ? 0.6 : 3.4,
+              repeat: Infinity,
+              times: isHovered ? undefined : [0, 0.9, 0.93, 0.96, 1],
+            }}
+          />
+        </div>
+
+        {/* Bottom Propulsion Thruster */}
+        <div className="absolute -bottom-1.5 flex items-center gap-1">
+          <motion.span
+            animate={{ opacity: [0.4, 0.9, 0.4], height: [3, 5, 3] }}
+            transition={{ duration: 0.7, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-2 rounded-b-full bg-white/70 shadow-[0_0_6px_rgba(255,255,255,0.6)]"
+          />
+        </div>
+      </motion.div>
+
+      {/* Floating Tooltip / Speech Bubble */}
+      <motion.div
+        initial={{ opacity: 0, x: 8 }}
+        animate={{
+          opacity: isHovered ? 1 : 0.85,
+          x: isHovered ? 0 : 2,
+        }}
+        className="absolute top-24 sm:top-28 right-full mr-2.5 pointer-events-none transition-all duration-200 hidden sm:flex items-center"
+      >
+        <div className="relative px-3 py-1.5 rounded-xl bg-[#0a0a0d]/95 border border-white/20 text-white shadow-[0_6px_25px_rgba(0,0,0,0.85)] backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap">
+          <span className="font-heading text-[11px] font-medium tracking-wide text-white/90">
+            ASK AI!
+          </span>
+          {/* Arrow */}
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-[#0a0a0d] border-t border-r border-white/20 rotate-45" />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────
 export default function AskAshwathAI() {
   const [isOpen, setIsOpen] = useState(false);
@@ -313,6 +502,41 @@ export default function AskAshwathAI() {
   const handleOpen = () => { setHasOpened(true); setIsOpen(true); };
   const handleClose = () => setIsOpen(false);
 
+  // Global events & Cmd+K / Ctrl+K shortcut listener
+  useEffect(() => {
+    const handleOpenEvent = (e) => {
+      setHasOpened(true);
+      setIsOpen(true);
+      const initialQuestion = e?.detail?.question;
+      if (initialQuestion) {
+        setTimeout(() => {
+          sendMessage(initialQuestion);
+        }, 120);
+      }
+    };
+    const handleCloseEvent = () => setIsOpen(false);
+
+    window.addEventListener('open-ask-ai', handleOpenEvent);
+    window.addEventListener('close-modals', handleCloseEvent);
+
+    const handleGlobalKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsOpen((prev) => {
+          if (!prev) setHasOpened(true);
+          return !prev;
+        });
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      window.removeEventListener('open-ask-ai', handleOpenEvent);
+      window.removeEventListener('close-modals', handleCloseEvent);
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [sendMessage]);
+
   const hasSentMessage = history.some(h => h.role === 'user');
 
   return (
@@ -326,13 +550,13 @@ export default function AskAshwathAI() {
             role="dialog"
             aria-modal="true"
             aria-label="Ask Ashwath AI"
-            /* Expand from the exact bottom-right corner where the button is */
-            initial={{ opacity: 0, scale: 0.04, borderRadius: '50%' }}
-            animate={{ opacity: 1, scale: 1, borderRadius: '0%' }}
-            exit={{ opacity: 0, scale: 0.04, borderRadius: '50%' }}
-            transition={{ type: 'spring', stiffness: 220, damping: 28, mass: 1 }}
+            /* Expand smoothly from bottom-center */
+            initial={{ opacity: 0, scale: 0.92, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 30 }}
+            transition={{ type: 'spring', stiffness: 280, damping: 28, mass: 0.9 }}
             style={{
-              transformOrigin: 'calc(100% - 40px) calc(100% - 40px)',
+              transformOrigin: 'center bottom',
               background: '#050505',
             }}
             className="fixed inset-0 z-[9999] flex flex-col"
@@ -368,20 +592,6 @@ export default function AskAshwathAI() {
 
                 <div className="h-5 w-px bg-white/[0.08]" />
 
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <div className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.10] flex items-center justify-center">
-                      <Bot className="w-5 h-5 text-white/65" />
-                    </div>
-                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#050505]">
-                      <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-70" />
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-heading text-sm font-bold text-white/90 leading-none">Ask Ashwath AI</p>
-                    <p className="font-mono text-[10px] text-text-muted mt-0.5 tracking-wide">Portfolio assistant</p>
-                  </div>
-                </div>
               </div>
 
               {/* Right: Status pill */}
@@ -509,7 +719,7 @@ export default function AskAshwathAI() {
                     </motion.button>
                   </div>
                   <p className="mt-2 text-center font-mono text-[9px] text-white/12 tracking-widest select-none uppercase">
-                    Only answers questions about Ashwath S Kulal · Powered by Google Gemini
+                    Only answers questions about Ashwath S Kulal
                   </p>
                 </div>
               </motion.div>
@@ -518,38 +728,9 @@ export default function AskAshwathAI() {
         )}
       </AnimatePresence>
 
-      {/* ── Floating trigger button ─────────────────────────────── */}
+      {/* ── Hanging Bot Trigger on Screen ── */}
       <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            key="fab"
-            id="ask-ashwath-ai-btn"
-            onClick={handleOpen}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-            className="fixed bottom-6 right-6 z-[9998] w-14 h-14 rounded-2xl flex items-center justify-center border border-white/[0.12] bg-[#111114] hover:bg-[#1c1c21] hover:border-white/25 transition-colors shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
-            aria-label="Open Ask Ashwath AI"
-            aria-controls="ask-ashwath-ai-panel"
-          >
-            <MessageCircle className="w-5 h-5 text-white/80" />
-
-            {/* Sparkle badge */}
-            {!hasOpened && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 1.8, type: 'spring', stiffness: 500, damping: 18 }}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-md"
-              >
-                <Sparkles className="w-3 h-3 text-black" />
-              </motion.span>
-            )}
-          </motion.button>
-        )}
+        {!isOpen && <HangingBot onClick={handleOpen} />}
       </AnimatePresence>
     </>
   );

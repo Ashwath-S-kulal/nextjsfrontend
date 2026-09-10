@@ -52,24 +52,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Outer spring follower ring */}
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full border border-white/40 hidden md:block"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: '-50%',
-          translateY: '-50%',
-          width: isPointer ? 44 : 26,
-          height: isPointer ? 44 : 26,
-          backgroundColor: isPointer ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
-          boxShadow: isPointer ? '0 0 15px rgba(255, 255, 255, 0.15)' : 'none',
-          opacity: isVisible ? 1 : 0,
-          transition: 'width 0.2s ease, height 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease',
-        }}
-        aria-hidden="true"
-      />
-
       {/* Tiny direct center dot */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white hidden md:block"
