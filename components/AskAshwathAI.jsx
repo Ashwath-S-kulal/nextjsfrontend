@@ -692,7 +692,7 @@ export default function AskAshwathAI() {
                 className="flex-shrink-0 border-t border-white/[0.07] bg-[#050505]"
               >
                 <div className="max-w-3xl mx-auto px-4 sm:px-8 py-4">
-                  <div className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] focus-within:border-white/[0.20] focus-within:bg-white/[0.05] transition-all duration-200">
+                  <div className="flex items-center gap-3 px-5 py-2 rounded-2xl bg-white/[0.03] border border-white/[0.08] focus-within:border-white/[0.20] focus-within:bg-white/[0.05] transition-all duration-200">
                     <input
                       ref={inputRef}
                       id="ask-ashwath-input"

@@ -1,13 +1,4 @@
-/**
- * app/api/chat/route.js
- *
- * Server-side API route. Handles chat requests from the AskAshwathAI
- * component. Uses Google Gemini (free-tier flash model) with a strict
- * portfolio-only system instruction.
- *
- * The GEMINI_API_KEY is read from the server environment and is NEVER
- * exposed to the browser.
- */
+
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildSystemInstruction } from '@/lib/portfolioContext';
